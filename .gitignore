@@ -38,14 +38,14 @@ yarn-error.log*
 .env*.local
 .env
 =======
-.pnpm-debug.log*
+.bun-debug.log*
 
 # env files (can opt-in for committing if needed)
 .env*
 >>>>>>> 31e03d8 (Initial commit from Create Next App)
 
-# vercel
-.vercel
+# Dokploy
+.Dokploy
 
 # typescript
 *.tsbuildinfo

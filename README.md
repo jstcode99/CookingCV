@@ -20,22 +20,44 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Acerca del proyecto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Es un proyecto para la hackaton con ningun objetivo comercial mas alla de GANAR :D,
+el proyecto usara una arquitectura Hexogal + Layared by feauteres. conectada con Supabase
+en gestion de base de datos.
 
-## Learn More
+para la validacion de formulario se usara Zod + React Hook Forms
+para la UI minimalista con Shadcn + lucide icons
 
-To learn more about Next.js, take a look at the following resources:
+### Estructura de carpetas
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
->>>>>>> 31e03d8 (Initial commit from Create Next App)
+``
+/app
+  /..
+/application
+    /actions
+        other.actions.ts
+    /container
+        other.container.ts
+    /validations
+        other.validations.ts // yup 
+/domain
+    /entities
+        other.entity.ts
+    /ports
+        other.port.ts
+    /use-cases
+        other.cases.ts
+/infrastructure
+    /cache
+    /db
+        supabase.proxy.ts
+        supabase.route.ts
+        supabase.server.ts
+    /adapters
+        /supabase
+            other.adapter.ts.ts
+/features
+    /other
+        other-form.tsx
+``

@@ -1,5 +1,86 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# cooking-cv — Claude Code Context
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+Plataforma de adaptacion de cv por ofertas especificas con exportacion de cv en pdf con Next.js 16 + Supabase + Clean Architecture.
+
+## Stack
+
+- **Next.js 16** App Router, React 19, TypeScript estricto
+- **Supabase** — auth, PostgreSQL con RLS, Storage
+- **Clean/Hexagonal Architecture** — domain → ports → adapters
+- **Tailwind CSS** + shadcn/ui + Radix UI
+- **Yup** (validación), **react-hook-form**, **Vitest** (tests)
+- **i18n** con rutas dinámicas `[lang]` (es/en)
+- **bun**
+
+## Agentes disponibles
+
+- `@task-orchestrator` — enruta solicitudes al agente correcto
+- `@builder` — implementa features e issues de Linear end-to-end
+- `@implementation-tester` — valida con Vitest, type check y patrones del proyecto
+- `@linear-planning-agent` — crea y gestiona issues en Linear (nunca GitHub Issues)
+
+## Ciclo de desarrollo
+ 
+```
+"inicia COO-X"
+    │
+    ▼
+@issue-starter ── crea worktree + rama + Linear: In Progress
+    │
+    ▼
+@builder ── implementa en worktree con commits semánticos granulares
+    │
+    ▼
+@implementation-tester ── type check + tests + patrones
+    │ NECESITA CORRECCIONES → vuelve a @builder
+    │ APROBADO
+    ▼
+@pr-manager (Fase 1) ── push + crea PR + Linear: In Review
+    │
+    ▼
+[tú revisas el PR en GitHub — Dokploy preview activo]
+    │
+    ▼ "aprobado" / "merge COO-X"
+@pr-manager (Fase 2) ── squash merge + Linear: Done + elimina worktree
+```
+ 
+## Skills disponibles
+ 
+Las skills se cargan bajo demanda con la herramienta `skill`.
+ 
+| Skill | Cuándo usarla |
+|---|---|
+| `arquitectura` | Crear features, módulos, rutas — dónde va cada archivo |
+| `code-conventions` | Escribir o revisar cualquier código TypeScript/React |
+| `integraciones` | Supabase Auth, Storage, RLS, Google Maps |
+| `workflows` | Migraciones, CACHE_TAGS, comandos bun, testing |
+| `git-workflow` | Worktrees, commits semánticos, PRs, merge squash |
+
+# MCP disponibles por agente
+ 
+| Agente | linear | supabase | context7 |
+|---|---|---|---|
+| `issue-starter` | ✅ | ❌ | ❌ |
+| `builder` | ❌ | ✅ | ✅ |
+| `implementation-tester` | ❌ | ✅ | ❌ |
+| `pr-manager` | ✅ | ❌ | ❌ |
+| `linear-planning-agent` | ✅ | ❌ | ❌ |
+
+## Convenciones de ramas
+ 
+- Features: `feature/coo-x-slug`
+- Bugs: `fix/coo-x-slug`
+- Worktrees en: `~/projects/cooking-cv-<slug>/`
+
+## Reglas para todos los agentes
+
+- Leer la skill relevante ANTES de escribir código
+- Nunca instanciar clientes Supabase fuera de `infrastructure/db/`
+- `withServerAction` en todos los Server Actions — nunca try/catch manual
+- Nunca instanciar adapters o servicios fuera de `appModule()`
+- Usar `CACHE_TAGS` de constants.ts — nunca strings crudos para revalidateTag
+- Sin `any` en TypeScript (excepto mappers con rows de Supabase sin tipo)
+- Usar `@/` para todos los imports — nunca rutas relativas
+- Issues solo en Linear — nunca GitHub Issues
+- Traducciones siempre en `locales/es/` y `locales/en/` al mismo tiempo
+- Seguir la estructura de uso de useTraslation
