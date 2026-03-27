@@ -30,32 +30,25 @@ para la UI minimalista con Shadcn + lucide icons
 ### Estructura de carpetas
 
 ``
-/app
-  /..
-/application
-    /actions
-        other.actions.ts
-    /container
-        other.container.ts
-    /validations
-        other.validations.ts // yup 
-/domain
-    /entities
-        other.entity.ts
-    /ports
-        other.port.ts
-    /use-cases
-        other.cases.ts
-/infrastructure
-    /cache
-    /db
-        supabase.proxy.ts
-        supabase.route.ts
-        supabase.server.ts
-    /adapters
-        /supabase
-            other.adapter.ts.ts
-/features
-    /other
-        other-form.tsx
+src/
+├── app/                  # (Routing) Solo define rutas, layouts y recibe params
+│   ├── (auth)/           # Grupos de rutas
+│   ├── dashboard/
+│   └── api/              # Webhooks o endpoints externos
+├── components/           # UI Compartida
+│   ├── ui/               # Componentes de shadcn (atómicos)
+│   └── shared/           # Botones complejos, headers, etc.
+├── modules/              # 🎯 EL NÚCLEO (Domain/Feature Layer)
+│   ├── tickets/          # Ejemplo de un dominio
+│   │   ├── components/   # UI específica de tickets (DataTables, Forms)
+│   │   ├── actions.ts    # Server Actions (Equivalente al "Controller")
+│   │   ├── services.ts   # Llamadas a Supabase (Equivalente al "Model/Repo")
+│   │   ├── schema.ts     # Validaciones Zod y tipos de TS
+│   │   └── hooks.ts      # Hooks específicos (si aplica)
+│   └── users/            # Otro dominio...
+├── lib/                  # Configuraciones globales
+│   ├── supabase/         # Clientes (client.ts, server.ts, admin.ts)
+│   └── utils.ts          # Utils de tailwind/shadcn
+├── hooks/                # Hooks globales (use-mobile, etc.)
+└── types/                # Tipos globales o generados por Supabase CLI
 ``
