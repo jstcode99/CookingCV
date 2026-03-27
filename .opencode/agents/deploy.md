@@ -140,11 +140,51 @@ en Dokploy con el mismo valor. Sincronizar con:
   → esto dispara el deploy automático en Dokploy
 
 ### Dokploy CLI
-- Dokploy --prod          → deploy directo a producción (sin git)
-- Dokploy                 → deploy a preview URL
-- Dokploy logs --follow   → logs en tiempo real
-- Dokploy env             → debes usar las configuradad de Dokploy
-- Dokploy inspect [url]   → detalles del último deploy
+Doc [https://github.com/Dokploy/cli](https://github.com/Dokploy/cli) with your browser to see the docs.
+<>
+
+Authentication
+```sh
+    dokploy authenticate: Authenticate with the Dokploy server.
+    dokploy verify: Verify current authentication.
+```
+
+Project Management
+
+```sh
+    dokploy project:create: Create a new project.
+    dokploy project:info: Get information about an existing project.
+    dokploy project:list: List all projects.
+```
+
+Environment Management
+
+```sh
+    dokploy environment:create: Create a new environment.
+    dokploy environment:delete: Delete an existing environment.
+```
+
+Application Management
+
+```sh
+    dokploy app:create: Create a new application.
+    dokploy app:delete: Delete an existing application.
+    dokploy app:deploy: Deploy an application.
+    dokploy app:stop: Stop a running application.
+```
+
+Enviroment Management
+
+```sh
+    dokploy env pull <file>: Pull environment variables from Dokploy in a .
+    dokploy env push <file>: Push environment variables to Dokploy from a .
+```
+
+For more information about a specific command, use:
+
+```sh
+$ dokploy [COMMAND] --help
+```
 
 ### Antes de cualquier deploy SIEMPRE ejecuta:
 1. bunx tsc --noEmit         → verificar tipos
