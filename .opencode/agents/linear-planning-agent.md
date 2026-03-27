@@ -43,10 +43,10 @@ Prioridad: urgent | high | medium | low
 
 ## Descomposición de features grandes
 
-1. Issue de dominio: entities, ports, services
-2. Issue de infra: adapter Supabase, migración SQL
-3. Issue de aplicación: validation, mapper, action, appModule
-4. Issue de UI: features/, app/[lang]/
+1. Issue de module: entities, ports, services
+2. Issue de supabase: Supabase, migración SQL
+3. Issue de aplicación: schema, mapper, action, services
+4. Issue de UI: /module/<module>/componensts/
 
 Máximo 4-6h por issue.
 
