@@ -1,126 +1,125 @@
 ---
 name: arquitectura
 description: >
-  Arquitectura real del proyecto cooking-cv — Clean/Hexagonal con Next.js 16 App Router.
-  Usar SIEMPRE al crear features nuevas, módulos, rutas, componentes, o cuando el usuario
+  Arquitectura real del proyecto — Modular con Next.js App Router.
+  Usar SIEMPRE al crear módulos nuevos, rutas, componentes, o cuando el usuario
   pregunte dónde va un archivo o cómo organizar código nuevo.
 ---
 
-# Arquitectura — cooking-cv
+# Arquitectura — Modular (Next.js App Router)
+
+## Filosofía
+
+Arquitectura **modular por dominio**: cada módulo en `src/modules/` es autónomo y agrupa
+todo lo que necesita (UI, lógica, validación, acceso a datos). El código compartido vive
+en `components/`, `hooks/`, `lib/` y `types/`.
 
 ## Capas y regla de dependencia
 
 ```
-app/, features/          ← Presentación (UI, rutas)
-application/             ← Aplicación (actions, validation, mappers, modules)
-infrastructure/          ← Infraestructura (adapters, db, config)
-domain/                  ← Dominio puro (entities, ports, services, errors)
+app/              ← Solo routing: páginas, layouts, params, API routes
+modules/<dominio> ← Núcleo: lógica, datos, UI y validación por feature
+components/       ← UI reutilizable (shadcn base + componentes compartidos)
+lib/              ← Config global (clientes Supabase, utils)
+hooks/            ← Hooks globales
+types/            ← Tipos globales / generados por Supabase CLI
 ```
 
-**La dependencia siempre va hacia adentro: app → application → domain ← infrastructure**  
-Nunca importes `infrastructure/` desde `domain/`.
+**Regla clave:** `app/` solo importa de `modules/`. Los módulos pueden importar de
+`components/`, `lib/`, `hooks/` y `types/`, pero **nunca entre módulos distintos**
+(si hay lógica compartida, extráela a `lib/` o `components/shared/`).
 
 ## Árbol de carpetas
 
 ```
-cooking-cv/
-├── app/[lang]/                     # App Router con i18n obligatoria
-│   ├── auth/                       # sign-in, sign-up, otp, callback, sign-out
-│   ├── dashboard/                  # properties, listings, users, enquiries, profile
-│   ├── onboarding/                 # primer acceso, registro inmobiliaria
-│   ├── listing/[slug]/             # página pública de listado
-│   ├── estate/[slug]/              # página pública de inmobiliaria
-│   ├── [..location]/               # búsqueda por ubicación
-│   ├── layout.tsx, page.tsx        # landing
-│   └── providers.tsx               # ThemeProvider, ReactQueryProvider, etc.
+src/
+├── app/                        # (Routing) Solo rutas, layouts y params
+│   ├── (auth)/                 # Grupo de rutas de autenticación
+│   │   ├── sign-in/page.tsx
+│   │   └── sign-up/page.tsx
+│   ├── dashboard/              # Rutas protegidas del dashboard
+│   │   └── tickets/page.tsx    # Importa componentes de modules/tickets
+│   ├── api/                    # Webhooks o endpoints externos
+│   ├── layout.tsx
+│   └── page.tsx
 │
-├── application/
-│   ├── actions/                    # Server Actions por entidad
-│   ├── mappers/                    # row DB → entidad de dominio
-│   ├── modules/app.module.ts       # único punto de composición DI
-│   ├── validation/                 # schemas Yup (base/ + por entidad)
-│   └── errors/                     # handle-error.ts, to-action-result.ts
+├── modules/                    # 🎯 EL NÚCLEO (Feature/Domain Layer)
+│   ├── tickets/                # Ejemplo de módulo
+│   │   ├── components/         # UI específica del módulo (DataTables, Forms)
+│   │   ├── actions.ts          # Server Actions (escrituras, mutaciones)
+│   │   ├── services.ts         # Llamadas a Supabase (queries, reads)
+│   │   ├── schema.ts           # Schemas Zod + tipos TypeScript del módulo
+│   │   └── hooks.ts            # Hooks cliente específicos (si aplica)
+│   └── users/                  # Otro módulo...
+│       ├── components/
+│       ├── actions.ts
+│       ├── services.ts
+│       └── schema.ts
 │
-├── domain/
-│   ├── entities/                   # tipos puros del negocio + enums
-│   ├── ports/                      # interfaces que la infra debe implementar
-│   ├── services/                   # lógica de negocio + unstable_cache
-│   ├── errors/                     # domain-error.ts, auth-error.ts, user.error.ts
-│   └── types/                      # tipos auxiliares de dominio
+├── components/                 # UI compartida entre módulos
+│   ├── ui/                     # Componentes atómicos de shadcn/ui
+│   └── shared/                 # Componentes compuestos reutilizables
+│                               # (headers, sidebars, modals genéricos, etc.)
 │
-├── infrastructure/
-│   ├── adapters/supabase/          # implementaciones de puertos con Supabase
-│   ├── cookies/cookies.adapter.ts  # implementa CookiesPort
-│   ├── db/
-│   │   ├── supabase.server.ts      # cliente server (SSR)
-│   │   ├── supabase.server-admin.ts # cliente admin (service_role)
-│   │   └── supabase.proxy.ts       # proxy para server components
-│   ├── config/
-│   │   ├── constants.ts            # CACHE_TAGS, COOKIE_NAMES, STORAGE_BUCKETS, FILE_LIMITS
-│   │   ├── routes.ts               # ROUTES + createRouter(lang)
-│   │   └── cache.ts                # CacheConfig interface
-│   └── notifications/              # notification.service.ts
+├── lib/                        # Configuraciones y utilidades globales
+│   ├── supabase/
+│   │   ├── client.ts           # Cliente browser (Client Components)
+│   │   ├── server.ts           # Cliente server (SSR / Server Actions)
+│   │   └── admin.ts            # Cliente admin (service_role)
+│   └── utils.ts                # cn(), helpers de Tailwind/shadcn
 │
-├── features/                       # componentes UI agrupados por dominio
-│   ├── agents/, auth/, dashboard/
-│   ├── properties/, listings/, real-states/
-│   ├── users/, enquiries/, profile/
-│   ├── favorites/, image-manager/, import/
-│   ├── places/, landing/, navigation/
-│   └── onboarding/, loader/
-│
-├── shared/
-│   ├── hooks/
-│   │   ├── with-server-action.ts   # wrapper que produce ActionResult
-│   │   ├── use-server-mutation.hook.ts # hook cliente para invocar actions
-│   │   └── to-action-result.ts     # convierte errores a ActionResult
-│   ├── redirect.ts
-│   └── utils/lang.ts               # getLangServerSide()
-│
-├── app/components/ui/              # componentes shadcn/ui base
-├── app/hooks/                      # hooks de app (use-mobile, use-routes, etc.)
-├── app/lib/
-│   ├── supabase.client.ts          # cliente browser para Client Components
-│   └── utils.ts                    # cn, flatten, generateSlug
-│
-├── i18n/                           # settings, server, client, router, provider
-├── locales/[en|es]/                # archivos JSON de traducción
-├── interfaces/http/http-context.ts # CookieContext type
-└── supabase/migrations/            # migraciones SQL
+├── hooks/                      # Hooks globales (use-mobile, use-toast, etc.)
+└── types/                      # Tipos globales o generados por Supabase CLI
+    ├── database.types.ts       # Auto-generado por `supabase gen types`
+    └── index.ts                # Re-exports de tipos compartidos
 ```
+
+## Anatomía de un módulo
+
+Cada archivo dentro de `modules/<dominio>/` tiene una responsabilidad clara:
+
+| Archivo | Responsabilidad |
+|---|---|
+| `schema.ts` | Schemas Zod para validación + tipos TypeScript inferidos |
+| `services.ts` | Funciones de lectura/query a Supabase (solo `select`) |
+| `actions.ts` | Server Actions para escrituras (`insert`, `update`, `delete`) |
+| `hooks.ts` | Hooks cliente que consumen actions/services (React Query, etc.) |
+| `components/` | Componentes React exclusivos de este módulo |
 
 ## Dónde va cada cosa nueva
 
 | Qué creas | Dónde |
 |---|---|
-| Entidad de negocio | `domain/entities/<entidad>.entity.ts` |
-| Enum de dominio | `domain/entities/<entidad>.enums.ts` |
-| Interfaz de repositorio | `domain/ports/<entidad>.port.ts` |
-| Lógica de negocio | `domain/services/<entidad>.service.ts` |
-| Implementación Supabase | `infrastructure/adapters/supabase/supabase-<entidad>.adapter.ts` |
-| Schema de validación | `application/validation/<entidad>.validation.ts` o `.schema.ts` |
-| Server Action | `application/actions/<entidad>.actions.ts` |
-| Mapper DB→entidad | `application/mappers/<entidad>.mapper.ts` |
-| Componente de feature | `features/<dominio>/<componente>.tsx` |
-| Componente UI base | `app/components/ui/<componente>.tsx` |
-| Página de ruta | `app/[lang]/<ruta>/page.tsx` |
-| Hook del cliente | `app/hooks/use-<nombre>.ts` |
+| Nuevo módulo/dominio | `src/modules/<dominio>/` |
+| Schema de validación + tipos | `src/modules/<dominio>/schema.ts` |
+| Queries a Supabase (reads) | `src/modules/<dominio>/services.ts` |
+| Mutaciones / Server Actions | `src/modules/<dominio>/actions.ts` |
+| Hook cliente del módulo | `src/modules/<dominio>/hooks.ts` |
+| Componente UI del módulo | `src/modules/<dominio>/components/<componente>.tsx` |
+| Componente shadcn (atómico) | `src/components/ui/<componente>.tsx` |
+| Componente compartido | `src/components/shared/<componente>.tsx` |
+| Página / ruta | `src/app/<ruta>/page.tsx` |
+| Hook global | `src/hooks/use-<nombre>.ts` |
+| Config / util global | `src/lib/utils.ts` o `src/lib/<nombre>.ts` |
+| Cliente Supabase | `src/lib/supabase/{client|server|admin}.ts` |
+| Tipos globales | `src/types/index.ts` |
+| Tipos generados Supabase | `src/types/database.types.ts` (no editar a mano) |
 | Migración SQL | `supabase/migrations/<timestamp>_<descripcion>.sql` |
-| Cache tag nuevo | `infrastructure/config/constants.ts` → `CACHE_TAGS` |
-| Bucket nuevo | `infrastructure/config/constants.ts` → `STORAGE_BUCKETS` |
 
-## Entidades del dominio actuales
+## Al añadir un módulo nuevo, sigue este orden
 
-`auth`, `profile`, `real-estate`, `agent`, `property`, `listing`, `property-image`, `inquiry`, `favorite`, `session`, `user`, `import`
+1. Crear carpeta `src/modules/<dominio>/`
+2. `schema.ts` → definir tipos Zod + inferir tipos TypeScript
+3. `services.ts` → implementar queries de lectura con el cliente Supabase server
+4. `actions.ts` → implementar Server Actions de escritura, usar schema para validar
+5. `hooks.ts` → (si hay lógica cliente) wrappear con React Query u otro
+6. `components/` → construir la UI específica consumiendo actions/services
+7. `src/app/<ruta>/page.tsx` → crear la página e importar componentes del módulo
 
-Al añadir una entidad nueva, sigue este orden:
-1. `domain/entities/` → entidad + enums
-2. `domain/ports/` → interfaz
-3. `domain/services/` → servicio
-4. `infrastructure/adapters/supabase/` → adapter
-5. `application/validation/` → schema Yup
-6. `application/mappers/` → mapper
-7. `application/modules/app.module.ts` → registrar
-8. `application/actions/` → Server Actions
-9. `features/<dominio>/` → componentes UI
-10. `app/[lang]/` → rutas/páginas
+## Reglas importantes
+
+- **`app/` no contiene lógica:** solo importa y renderiza componentes de `modules/`.
+- **Los módulos no se importan entre sí:** si dos módulos comparten lógica, muévela a `lib/` o `components/shared/`.
+- **`services.ts` es solo lectura:** las escrituras van siempre en `actions.ts` como Server Actions (`"use server"`).
+- **`schema.ts` es la fuente de verdad de tipos:** usa `z.infer<typeof schema>` en lugar de definir tipos sueltos.
+- **Supabase CLI:** al cambiar el schema de la DB, regenerar `types/database.types.ts` con `supabase gen types typescript`.
