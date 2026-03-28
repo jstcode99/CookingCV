@@ -4,41 +4,60 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   Deep Twilight Palette — CSS Custom Properties
+   ============================================================ */
+:root {
+    /* ── Deep Twilight (azul índigo profundo) ───────────────── */
+    --deep-twilight-50: oklch(0.94 0.03 264);
+    --deep-twilight-100: oklch(0.9 0.055 264);
+    --deep-twilight-200: oklch(0.8 0.1 264);
+    --deep-twilight-300: oklch(0.68 0.15 264);
+    --deep-twilight-400: oklch(0.56 0.2 264);
+    --deep-twilight-500: oklch(0.44 0.25 264); /* #063bf9 — brand */
+    --deep-twilight-600: oklch(0.37 0.22 264);
+    --deep-twilight-700: oklch(0.29 0.18 264);
+    --deep-twilight-800: oklch(0.21 0.13 264);
+    --deep-twilight-900: oklch(0.14 0.08 264);
+    --deep-twilight-950: oklch(0.1 0.055 264);
+
+    /* ── Cerulean (azul cielo medio) ────────────────────────── */
+    --cerulean-50: oklch(0.965 0.025 220);
+    --cerulean-100: oklch(0.93 0.05 220);
+    --cerulean-200: oklch(0.86 0.09 220);
+    --cerulean-300: oklch(0.78 0.13 220);
+    --cerulean-400: oklch(0.7 0.165 220);
+    --cerulean-500: oklch(0.62 0.19 220); /* #0bb6f4 */
+    --cerulean-600: oklch(0.53 0.16 220);
+    --cerulean-700: oklch(0.42 0.12 220);
+    --cerulean-800: oklch(0.31 0.085 220);
+    --cerulean-900: oklch(0.2 0.05 220);
+    --cerulean-950: oklch(0.145 0.035 220);
+
+    /* ── Sky Surge (azul cielo brillante) ───────────────────── */
+    --sky-surge-50: oklch(0.97 0.02 210);
+    --sky-surge-100: oklch(0.94 0.04 210);
+    --sky-surge-200: oklch(0.88 0.075 210);
+    --sky-surge-300: oklch(0.81 0.115 210);
+    --sky-surge-400: oklch(0.74 0.15 210);
+    --sky-surge-500: oklch(0.68 0.175 210); /* #05c9fa */
+    --sky-surge-600: oklch(0.57 0.145 210);
+    --sky-surge-700: oklch(0.45 0.11 210);
+    --sky-surge-800: oklch(0.33 0.075 210);
+    --sky-surge-900: oklch(0.21 0.045 210);
+    --sky-surge-950: oklch(0.15 0.03 210);
+}
+
+/* ============================================================
+   Tailwind v4 Theme — @theme inline
+   ============================================================ */
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
+    /* Fonts */
     --font-sans: var(--font-sans);
     --font-mono: var(--font-geist-mono);
     --font-heading: var(--font-sans);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
+
+    /* Radii */
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -46,79 +65,173 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* ── Colores semánticos shadcn → Tailwind ─────────────── */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    /* ── Charts ───────────────────────────────────────────── */
+    --color-chart-1: var(--deep-twilight-500);
+    --color-chart-2: var(--cerulean-500);
+    --color-chart-3: var(--sky-surge-500);
+    --color-chart-4: var(--deep-twilight-300);
+    --color-chart-5: var(--cerulean-300);
+
+    /* ── Sidebar ──────────────────────────────────────────── */
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    /* ── Paleta completa expuesta como utilidades Tailwind ── */
+    --color-deep-twilight-50: var(--deep-twilight-50);
+    --color-deep-twilight-100: var(--deep-twilight-100);
+    --color-deep-twilight-200: var(--deep-twilight-200);
+    --color-deep-twilight-300: var(--deep-twilight-300);
+    --color-deep-twilight-400: var(--deep-twilight-400);
+    --color-deep-twilight-500: var(--deep-twilight-500);
+    --color-deep-twilight-600: var(--deep-twilight-600);
+    --color-deep-twilight-700: var(--deep-twilight-700);
+    --color-deep-twilight-800: var(--deep-twilight-800);
+    --color-deep-twilight-900: var(--deep-twilight-900);
+    --color-deep-twilight-950: var(--deep-twilight-950);
+
+    --color-cerulean-50: var(--cerulean-50);
+    --color-cerulean-100: var(--cerulean-100);
+    --color-cerulean-200: var(--cerulean-200);
+    --color-cerulean-300: var(--cerulean-300);
+    --color-cerulean-400: var(--cerulean-400);
+    --color-cerulean-500: var(--cerulean-500);
+    --color-cerulean-600: var(--cerulean-600);
+    --color-cerulean-700: var(--cerulean-700);
+    --color-cerulean-800: var(--cerulean-800);
+    --color-cerulean-900: var(--cerulean-900);
+    --color-cerulean-950: var(--cerulean-950);
+
+    --color-sky-surge-50: var(--sky-surge-50);
+    --color-sky-surge-100: var(--sky-surge-100);
+    --color-sky-surge-200: var(--sky-surge-200);
+    --color-sky-surge-300: var(--sky-surge-300);
+    --color-sky-surge-400: var(--sky-surge-400);
+    --color-sky-surge-500: var(--sky-surge-500);
+    --color-sky-surge-600: var(--sky-surge-600);
+    --color-sky-surge-700: var(--sky-surge-700);
+    --color-sky-surge-800: var(--sky-surge-800);
+    --color-sky-surge-900: var(--sky-surge-900);
+    --color-sky-surge-950: var(--sky-surge-950);
 }
 
+/* ============================================================
+   Aliases shadcn — TEMA CLARO
+   ============================================================ */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --background: var(--deep-twilight-50);
+    --foreground: var(--deep-twilight-900);
+
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: var(--deep-twilight-900);
+
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --popover-foreground: var(--deep-twilight-900);
+
+    --primary: var(--deep-twilight-500);
+    --primary-foreground: var(--deep-twilight-50);
+
+    --secondary: var(--cerulean-100);
+    --secondary-foreground: var(--cerulean-800);
+
+    --muted: var(--deep-twilight-100);
+    --muted-foreground: var(--deep-twilight-600);
+
+    --accent: var(--sky-surge-400);
+    --accent-foreground: var(--sky-surge-950);
+
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --destructive-foreground: oklch(0.985 0 0);
+
+    --border: var(--deep-twilight-200);
+    --input: var(--deep-twilight-200);
+    --ring: var(--deep-twilight-500);
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar: var(--deep-twilight-50);
+    --sidebar-foreground: var(--deep-twilight-900);
+    --sidebar-primary: var(--deep-twilight-500);
+    --sidebar-primary-foreground: var(--deep-twilight-50);
+    --sidebar-accent: var(--cerulean-100);
+    --sidebar-accent-foreground: var(--cerulean-800);
+    --sidebar-border: var(--deep-twilight-200);
+    --sidebar-ring: var(--deep-twilight-500);
 }
 
+/* ============================================================
+   Aliases shadcn — TEMA OSCURO
+   ============================================================ */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    --background: var(--deep-twilight-950);
+    --foreground: var(--deep-twilight-50);
+
+    --card: var(--deep-twilight-900);
+    --card-foreground: var(--deep-twilight-50);
+
+    --popover: var(--deep-twilight-900);
+    --popover-foreground: var(--deep-twilight-50);
+
+    --primary: var(--deep-twilight-400);
+    --primary-foreground: var(--deep-twilight-950);
+
+    --secondary: var(--cerulean-800);
+    --secondary-foreground: var(--cerulean-100);
+
+    --muted: var(--deep-twilight-800);
+    --muted-foreground: var(--deep-twilight-300);
+
+    --accent: var(--sky-surge-500);
+    --accent-foreground: var(--sky-surge-950);
+
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --destructive-foreground: oklch(0.985 0 0);
+
+    --border: var(--deep-twilight-700);
+    --input: var(--deep-twilight-700);
+    --ring: var(--cerulean-500);
+
+    /* Sidebar */
+    --sidebar: var(--deep-twilight-900);
+    --sidebar-foreground: var(--deep-twilight-50);
+    --sidebar-primary: var(--deep-twilight-400);
+    --sidebar-primary-foreground: var(--deep-twilight-950);
+    --sidebar-accent: var(--cerulean-800);
+    --sidebar-accent-foreground: var(--cerulean-100);
+    --sidebar-border: var(--deep-twilight-700);
+    --sidebar-ring: var(--cerulean-500);
 }
 
-@import "./theme.css";
-
+/* ============================================================
+   Base layer
+   ============================================================ */
 @layer base {
     * {
         @apply border-border outline-ring/50;
