@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { verifyOtpValidation, defaultVerifyOtpValues, type VerifyOtpInput } from "../../src/modules/auth/schema";
-import { verifyOtpAction, resendOtpAction } from "../../src/modules/auth/actions";
+import { verifyOtpValidation, defaultVerifyOtpValues, type VerifyOtpInput } from "@/src/modules/auth/schema";
+import { verifyOtpAction, resendOtpAction } from "@/src/modules/auth/actions";
 import { AuthCard } from "./auth-card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -14,6 +15,7 @@ import { Label } from "../ui/label";
 import { toast } from "sonner";
 
 export function VerifyOtpForm() {
+  const t = useTranslations("auth");
   const router = useRouter();
   const searchParams = useSearchParams();
   const emailParam = searchParams.get("email") || "";
@@ -46,13 +48,13 @@ export function VerifyOtpForm() {
       const result = await verifyOtpAction(formData);
 
       if (result.success) {
-        toast.success("auth.verifyOtp.success");
+        toast.success(t("verifyOtp.success"));
         router.push("/");
       } else {
-        toast.error(result.message || "auth.errors.generic");
+        toast.error(result.message || t("errors.generic"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "auth.errors.generic");
+      toast.error(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +63,7 @@ export function VerifyOtpForm() {
   async function handleResend() {
     const email = form.getValues("email");
     if (!email) {
-      toast.error("auth.verifyOtp.enterEmail");
+      toast.error(t("verifyOtp.enterEmail"));
       return;
     }
 
@@ -69,25 +71,25 @@ export function VerifyOtpForm() {
     try {
       const result = await resendOtpAction(email);
       if (result.success) {
-        toast.success("auth.verifyOtp.resendSuccess");
+        toast.success(t("verifyOtp.resendSuccess"));
       } else {
-        toast.error(result.message || "auth.errors.generic");
+        toast.error(result.message || t("errors.generic"));
         setResendCooldown(0);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "auth.errors.generic");
+      toast.error(err instanceof Error ? err.message : t("errors.generic"));
       setResendCooldown(0);
     }
   }
 
   return (
     <AuthCard
-      title="auth.verifyOtp.title"
-      description="auth.verifyOtp.description"
+      titleKey="verifyOtp.title"
+      descriptionKey="verifyOtp.description"
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">auth.verifyOtp.email</Label>
+          <Label htmlFor="email">{t("verifyOtp.email")}</Label>
           <Input
             id="email"
             type="email"
@@ -104,7 +106,7 @@ export function VerifyOtpForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="code">auth.verifyOtp.code</Label>
+          <Label htmlFor="code">{t("verifyOtp.code")}</Label>
           <Input
             id="code"
             type="text"
@@ -124,13 +126,13 @@ export function VerifyOtpForm() {
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "common.loading" : "auth.verifyOtp.submit"}
+          {isLoading ? t("common.loading") : t("verifyOtp.submit")}
         </Button>
 
         <div className="text-center">
           {resendCooldown > 0 ? (
             <p className="text-sm text-muted-foreground">
-              auth.verifyOtp.resendCooldown{" "}
+              {t("verifyOtp.resendCooldown")}{" "}
               <span className="font-medium">{resendCooldown}s</span>
             </p>
           ) : (
@@ -139,7 +141,7 @@ export function VerifyOtpForm() {
               onClick={handleResend}
               className="text-sm text-primary hover:underline"
             >
-              auth.verifyOtp.resend
+              {t("verifyOtp.resend")}
             </button>
           )}
         </div>
@@ -150,7 +152,7 @@ export function VerifyOtpForm() {
           href="/auth/sign-in"
           className="font-medium text-primary hover:underline"
         >
-          auth.verifyOtp.backToSignIn
+          {t("verifyOtp.backToSignIn")}
         </Link>
       </p>
     </AuthCard>

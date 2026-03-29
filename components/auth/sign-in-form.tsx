@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { signInValidation, defaultSignInValues, type SignInInput } from "../../src/modules/auth/schema";
-import { signInAction } from "../../src/modules/auth/actions";
+import { signInValidation, defaultSignInValues, type SignInInput } from "@/src/modules/auth/schema";
+import { signInAction } from "@/src/modules/auth/actions";
 import { AuthCard } from "./auth-card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -14,6 +15,7 @@ import { OAuthButtons } from "./oauth-buttons";
 import { toast } from "sonner";
 
 export function SignInForm() {
+  const t = useTranslations("auth");
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<SignInInput>({
@@ -32,14 +34,14 @@ export function SignInForm() {
       const result = await signInAction(formData);
 
       if (result.success) {
-        toast.success("auth.signIn.success");
+        toast.success(t("signIn.success"));
         // Redirect to dashboard or home
         window.location.href = "/";
       } else {
-        toast.error(result.message || "auth.errors.generic");
+        toast.error(result.message || t("errors.generic"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "auth.errors.generic");
+      toast.error(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
       setIsLoading(false);
     }
@@ -47,12 +49,12 @@ export function SignInForm() {
 
   return (
     <AuthCard
-      title="auth.signIn.title"
-      description="auth.signIn.description"
+      titleKey="signIn.title"
+      descriptionKey="signIn.description"
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">auth.signIn.email</Label>
+          <Label htmlFor="email">{t("signIn.email")}</Label>
           <Input
             id="email"
             type="email"
@@ -70,15 +72,7 @@ export function SignInForm() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">auth.signIn.password</Label>
-            {/* TODO: Add forgot password link later
-            <Link
-              href="/auth/forgot-password"
-              className="text-xs text-muted-foreground hover:text-primary"
-            >
-              auth.signIn.forgotPassword
-            </Link>
-            */}
+            <Label htmlFor="password">{t("signIn.password")}</Label>
           </div>
           <Input
             id="password"
@@ -95,7 +89,7 @@ export function SignInForm() {
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "common.loading" : "auth.signIn.submit"}
+          {isLoading ? t("common.loading") : t("signIn.submit")}
         </Button>
       </form>
 
@@ -105,7 +99,7 @@ export function SignInForm() {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            common.or
+            {t("common.or")}
           </span>
         </div>
       </div>
@@ -113,12 +107,12 @@ export function SignInForm() {
       <OAuthButtons />
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        auth.signIn.noAccount{" "}
+        {t("signIn.noAccount")}{" "}
         <Link
           href="/auth/sign-up"
           className="font-medium text-primary hover:underline"
         >
-          auth.signUp.title
+          {t("signUp.title")}
         </Link>
       </p>
     </AuthCard>

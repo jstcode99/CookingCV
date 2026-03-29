@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signUpValidation, defaultSignUpValues, type SignUpInput } from "../../src/modules/auth/schema";
-import { signUpAction } from "../../src/modules/auth/actions";
+import { signUpValidation, defaultSignUpValues, type SignUpInput } from "@/src/modules/auth/schema";
+import { signUpAction } from "@/src/modules/auth/actions";
 import { AuthCard } from "./auth-card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -15,6 +16,7 @@ import { OAuthButtons } from "./oauth-buttons";
 import { toast } from "sonner";
 
 export function SignUpForm() {
+  const t = useTranslations("auth");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,13 +37,13 @@ export function SignUpForm() {
       const result = await signUpAction(formData);
 
       if (result.success) {
-        toast.success("auth.signUp.success");
+        toast.success(t("signUp.success"));
         router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email)}`);
       } else {
-        toast.error(result.message || "auth.errors.generic");
+        toast.error(result.message || t("errors.generic"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "auth.errors.generic");
+      toast.error(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
       setIsLoading(false);
     }
@@ -49,12 +51,12 @@ export function SignUpForm() {
 
   return (
     <AuthCard
-      title="auth.signUp.title"
-      description="auth.signUp.description"
+      titleKey="signUp.title"
+      descriptionKey="signUp.description"
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">auth.signUp.email</Label>
+          <Label htmlFor="email">{t("signUp.email")}</Label>
           <Input
             id="email"
             type="email"
@@ -71,7 +73,7 @@ export function SignUpForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">auth.signUp.password</Label>
+          <Label htmlFor="password">{t("signUp.password")}</Label>
           <Input
             id="password"
             type="password"
@@ -87,7 +89,7 @@ export function SignUpForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword">auth.signUp.confirmPassword</Label>
+          <Label htmlFor="confirmPassword">{t("signUp.confirmPassword")}</Label>
           <Input
             id="confirmPassword"
             type="password"
@@ -103,7 +105,7 @@ export function SignUpForm() {
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "common.loading" : "auth.signUp.submit"}
+          {isLoading ? t("common.loading") : t("signUp.submit")}
         </Button>
       </form>
 
@@ -113,7 +115,7 @@ export function SignUpForm() {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            common.or
+            {t("common.or")}
           </span>
         </div>
       </div>
@@ -121,12 +123,12 @@ export function SignUpForm() {
       <OAuthButtons />
 
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        auth.signUp.haveAccount{" "}
+        {t("signUp.haveAccount")}{" "}
         <Link
           href="/auth/sign-in"
           className="font-medium text-primary hover:underline"
         >
-          auth.signIn.title
+          {t("signIn.title")}
         </Link>
       </p>
     </AuthCard>

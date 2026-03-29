@@ -1,18 +1,21 @@
 "use client";
 
-import { signInWithOAuth } from "../../src/modules/auth/actions";
+import { useTranslations } from "next-intl";
+import { signInWithOAuth } from "@/src/modules/auth/actions";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 
 export function OAuthButtons() {
+  const t = useTranslations("auth");
+
   async function handleOAuthSignIn(provider: "google" | "github") {
     try {
       const result = await signInWithOAuth(provider);
       if (!result.success) {
-        toast.error(result.message || "auth.errors.generic");
+        toast.error(result.message || t("errors.generic"));
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "auth.errors.generic");
+      toast.error(err instanceof Error ? err.message : t("errors.generic"));
     }
   }
 
